@@ -1,0 +1,68 @@
+{% block content %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+    }
+    .form-container {
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 400px;
+        max-width: 90%;
+    }
+    .form-container h1 {
+        margin-bottom: 30px;
+        font-size: 24px;
+    }
+    .form-container label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+        text-align: left;
+    }
+    .form-container select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    .form-container button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007BFF;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .form-container button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="form-container">
+    <h1>Asignar Rutina a {{ user.name }}</h1>
+    <form action="/assign_routine/{{ user.email }}" method="post">
+        <label for="routine">Rutina:</label>
+        <select id="routine" name="routine" required>
+            <option value="">Selecciona una rutina</option>
+            {% for routine in routines %}
+                <option value="{{ routine.name }}">{{ routine.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Asignar</button>
+    </form>    
+</div>
+{% endblock %}

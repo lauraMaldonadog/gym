@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Ejercicios - Gym App{% endblock %}
+
+{% block content %}
+<h1>Ejercicios - {{ user_routine.name }}</h1>
+{% if user_routine %}
+    <ul>
+        {% for exercise in user_routine.exercises %}
+            <li>
+                <h2>{{ exercise.name }}</h2>
+                <p>{{ exercise.description }}</p>
+                <p>Sets: {{ exercise.sets }}, Reps: {{ exercise.reps }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No se han asignado ejercicios para esta rutina.</p>
+{% endif %}
+{% endblock %}

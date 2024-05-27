@@ -1,0 +1,53 @@
+[
+    {
+        "name": "Rutina Aumento de masa muscular",
+        "exercises": [
+            {
+                "name": "Bench Press",
+                "series": 4,
+                "repetitions": 10,
+                "image": "images/bench_press.jpg"
+            },
+            {
+                "name": "Squat",
+                "series": 4,
+                "repetitions": 12,
+                "image": "images/ex1.jpg"
+            }
+        ]
+    },
+    {
+        "name": "Rutina Bajar de peso",
+        "exercises": [
+            {
+                "name": "Running",
+                "series": 1,
+                "repetitions": 30,
+                "image": "images/running.jpg"
+            },
+            {
+                "name": "Jump Rope",
+                "series": 3,
+                "repetitions": 15,
+                "image": "images/jump.jpg"
+            }
+        ]
+    },
+    {
+        "name": "Rutina Terapia",
+        "exercises": [
+            {
+                "name": "Yoga",
+                "series": 1,
+                "repetitions": 60,
+                "image": "images/yoga.jpg"
+            },
+            {
+                "name": "Stretching",
+                "series": 2,
+                "repetitions": 10,
+                "image": "images/stretching.jpg"
+            }
+        ]
+    }
+]

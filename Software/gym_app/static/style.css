@@ -1,0 +1,140 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Evitar scroll en el body */
+    height: 100vh; /* Ajustar la altura del body a la altura total de la ventana gráfica */
+}
+
+.appbar {
+    display: flex;
+    justify-content: space-between; /* Espacia los elementos al máximo */
+    align-items: center; /* Alinea verticalmente los elementos */
+    background-color: #173656;
+    padding: 1rem;
+    box-sizing: border-box; /* Incluir padding y borde en el ancho y alto del elemento */
+    position: fixed; /* Hace que la barra de navegación sea fija */
+    top: 0; /* La fija en la parte superior de la ventana */
+    width: 100%; /* Hace que la barra ocupe todo el ancho */
+    z-index: 1000; /* Asegura que esté por encima del contenido */
+    transition: background-color 0.3s ease; /* Transición suave para el cambio de color de fondo */
+}
+
+.appbar a {
+    color: white;
+    text-decoration: none;
+    padding: 0 1rem;
+    transition: color 0.3s ease; /* Transición suave para el cambio de color de texto */
+}
+
+.appbar a:hover {
+    text-decoration: underline;
+    color: #173656; /* Cambia el color del texto al pasar el cursor */
+}
+
+.auth-buttons {
+    margin-left: auto; /* Mueve los botones de autenticación al extremo derecho */
+}
+
+.carousel {
+    width: 100%;
+    height: calc(100vh - 3rem); /* Altura completa de la ventana gráfica menos la altura de la appbar */
+    overflow: hidden; /* Ocultar overflow para evitar scroll */
+    position: relative;
+    margin-top: 3rem; /* Eliminar el margen superior */
+}
+
+.carousel-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%; /* Asegurar que cada slide tome toda la altura */
+    display: none; /* Ocultar todas las slides por defecto */
+    transition: transform 0.5s ease;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%; /* Ajustar altura al 100% del contenedor del carrusel */
+    object-fit: cover; /* Asegurar que la imagen cubra el área de la slide sin distorsión */
+}
+
+.carousel-slide.active {
+    display: block; /* Mostrar la slide activa */
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: #173656;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #dee2e6;
+}
+
+th {
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #ddd;
+}
+
+a {
+    color: #153455;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.form-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 400px;
+    max-width: 90%;
+    overflow-y: auto; /* Agregar desplazamiento vertical si el contenido excede */
+}
+
+h1.mb-4.text-center {
+    margin-top: 60px; /* Ajustar según sea necesario para que el título esté por encima de la barra de navegación */
+}
+
+.table-responsive {
+    max-width: 800px; /* Establece el ancho máximo deseado para la tabla */
+    margin:  auto; /* Centra la tabla horizontalmente en el contenedor */
+}
+
+.table {
+    width: auto; /* Cambia el ancho de la tabla a automático para que se ajuste al contenido */
+}
+
+.table th,
+.table td {
+    max-width: none; /* Elimina el ancho máximo de las celdas */
+    width: auto; /* Permite que las celdas se expandan según su contenido */
+    overflow: visible; /* Permite que el contenido desborde si es necesario */
+}
+

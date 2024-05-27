@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Ver Rutina - Gym App{% endblock %}
+
+{% block content %}
+<div style="overflow-y: scroll; max-height: 500px;"> <!-- Ajusta la altura máxima según tus necesidades -->
+    <h1>Rutina de {{ user.name }}</h1>
+
+    {% if user_routine %}
+        <h2>{{ user_routine.name }}</h2>
+        <ul>
+            {% for exercise in user_routine.exercises %}
+                <li>
+                    <strong>{{ exercise.name }}</strong>: {{ exercise.series }} series de {{ exercise.repetitions }} repeticiones
+                    <div>
+                        <img src="{{ url_for('static', filename=exercise.image) }}" alt="{{ exercise.name }}" style="width:200px;height:200px;">
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay una rutina asignada.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Gym App{% endblock %}
+
+{% block content %}
+<style>
+    .carousel {
+        position: relative;
+        width: 100%;
+        max-width: 100vw; /* Ensure carousel doesn't exceed viewport width */
+        overflow: hidden; /* Hide overflow to prevent scroll */
+    }
+
+    .carousel-container {
+        display: flex;
+        width: 100%;
+        height: 100vh; /* Full viewport height */
+    }
+
+    .carousel-slide {
+        min-width: 100%; /* Each slide takes full width */
+        display: none; /* Hide all slides by default */
+    }
+
+    .carousel-slide img {
+        width: 100%;
+        height: 100vh; /* Full viewport height */
+        object-fit: cover; /* Ensure image covers slide area without distortion */
+    }
+
+    .carousel-slide.active {
+        display: block; /* Show the active slide */
+    }
+
+    .overlay {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 400px;
+        max-width: 90%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .overlay h1 {
+        margin-bottom: 30px;
+        font-size: 24px;
+    }
+    .overlay label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+        text-align: left;
+    }
+    .overlay input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    .overlay button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007BFF;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .overlay button:hover {
+        background-color: #0056b3;
+    }
+    .overlay a {
+        display: inline-block;
+        margin-top: 15px;
+        color: #007BFF;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .overlay a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="carousel">
+    <div class="carousel-container">
+        <div class="carousel-slide active">
+            <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Image 1">
+        </div>
+        <div class="carousel-slide">
+            <img src="{{ url_for('static', filename='images/image2.jpg') }}" alt="Image 2" >
+        </div>
+        <div class="carousel-slide">
+            <img src="{{ url_for('static', filename='images/image3.jpg') }}" alt="Image 3">
+        </div>
+        <div class="carousel-slide">
+            <img src="{{ url_for('static', filename='images/image4.jpg') }}" alt="Image 4" >
+        </div>
+    </div>
+</div>
+
+<div class="overlay">
+    <h1>BIENVENIDO A STEEL BODIES GYM</h1>
+    <p>Horarios de Atención:</p>
+    <ul>
+        <li>Lunes a Viernes: 7:00am - 10:00pm</li>
+        <li>Sábado: 8:00am - 8:00pm</li>
+        <li>Domingo: Cerrado</li>
+    </ul>
+    
+  
+</div>
+
+<script>
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const totalSlides = slides.length;
+
+    function showSlides() {
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === slideIndex);
+        });
+        slideIndex = (slideIndex + 1) % totalSlides;
+        setTimeout(showSlides, 3000); // Change image every 3 seconds
+    }
+
+    document.addEventListener('DOMContentLoaded', showSlides);
+</script>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planes de Gimnasio</title>
+    <style>
+        .card-container {
+            display: flex;
+            justify-content: space-around; /* Para distribuir equitativamente los cards */
+            flex-wrap: wrap; /* Para que los cards se envuelvan en líneas si no hay suficiente espacio */
+        }
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 60px;
+            width: 300px;
+            height: 400px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+        .card h2 {
+            color: #333;
+        }
+        .card p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card">
+            <h2>Plan Básico</h2>
+            <p>Acceso al gimnasio durante horas laborables.</p>
+            <p>Entrenamiento personal no incluido.</p>
+            <p>Precio: $30/mes</p>
+        </div>
+        <div class="card">
+            <h2>Plan Avanzado</h2>
+            <p>Acceso ilimitado al gimnasio.</p>
+            <p>Entrenamiento personal incluido.</p>
+            <p>Precio: $50/mes</p>
+        </div>
+        <div class="card">
+            <h2>Plan Premium</h2>
+            <p>Acceso ilimitado al gimnasio.</p>
+            <p>Entrenamiento personalizado.</p>
+            <p>Clases grupales incluidas.</p>
+            <p>Precio: $80/mes</p>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}
