@@ -1,28 +1,108 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-import json
+from flask import Flask, render_template, request, redirect, url_for, session
 import os
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-DATA_FILE = 'Software/users.json'
-def load_routines():
-    with open('Software/routines.json', 'r') as file:
-        return json.load(file)
+
+# Definir las listas de rutinas y usuarios
+routines = [
+    {
+        "name": "Rutina Aumento de masa muscular",
+        "exercises": [
+            {
+                "name": "Bench Press",
+                "series": 4,
+                "repetitions": 10,
+                "image": "images/bench_press.jpg"
+            },
+            {
+                "name": "Squat",
+                "series": 4,
+                "repetitions": 12,
+                "image": "images/ex1.jpg"
+            }
+        ]
+    },
+    {
+        "name": "Rutina Bajar de peso",
+        "exercises": [
+            {
+                "name": "Running",
+                "series": 1,
+                "repetitions": 30,
+                "image": "images/running.jpg"
+            },
+            {
+                "name": "Jump Rope",
+                "series": 3,
+                "repetitions": 15,
+                "image": "images/jump.jpg"
+            }
+        ]
+    },
+    {
+        "name": "Rutina Terapia",
+        "exercises": [
+            {
+                "name": "Yoga",
+                "series": 1,
+                "repetitions": 60,
+                "image": "images/yoga.jpg"
+            },
+            {
+                "name": "Stretching",
+                "series": 2,
+                "repetitions": 10,
+                "image": "images/stretching.jpg"
+            }
+        ]
+    }
+]
+
+users = [
+    {
+        "name": "Admin User",
+        "email": "admin@example.com",
+        "password": "123",
+        "attendance": [
+            "2024-05-26"
+        ],
+        "valid_until": "2024-12-31",
+        "is_admin": True,
+        "routine": ""
+    },
+    {
+        "name": "Carlos Abril",
+        "email": "carlos@example.com",
+        "password": "password1",
+        "attendance": [],
+        "valid_until": "2024-06-25",
+        "plan": "Premium",
+        "routine": "Rutina Aumento de masa muscular"
+    },
+    {
+        "name": "Maria Mayo",
+        "email": "maria@example.com",
+        "password": "password2",
+        "attendance": [],
+        "valid_until": "2024-06-30",
+        "plan": "Premium",
+        "routine": "Rutina Terapia"
+    },
+    {
+        "name": "Juan",
+        "email": "juan@gmail.com",
+        "password": "123",
+        "plan": "Básico",
+        "attendance": [],
+        "valid_until": "2024-06-26",
+        "is_admin": False,
+        "routine": "Rutina Aumento de masa muscular"
+    }
+]
 
 
-def load_users():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, 'r') as file:
-            return json.load(file)
-    return []
-
-
-def save_users(users):
-    with open(DATA_FILE, 'w') as file:
-        json.dump(users, file, indent=4)
-
-        
 @app.route('/')
 def home():
     user_name = None
@@ -37,7 +117,6 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        users = load_users()
         user = next((u for u in users if u['email'] == email and u['password'] == password), None)
         if user:
             session['user'] = user['email']
@@ -64,7 +143,6 @@ def register():
         email = request.form['email']
         password = request.form['password']
         valid_until = (datetime.now() + timedelta(days=30)).date().isoformat()
-        users = load_users()
         if any(u['email'] == email for u in users):
             return 'Email already registered', 400
         users.append({
@@ -76,7 +154,6 @@ def register():
             'is_admin': False,
             'routine': ""
         })
-        save_users(users)
         return redirect(url_for('login'))
     return render_template('register.html')
 
@@ -84,7 +161,6 @@ def register():
 def admin_dashboard():
     if 'user' not in session or not session.get('is_admin'):
         return redirect(url_for('login'))
-    users = load_users()
     for user in users:
         if not user.get('routine'):
             user['routine'] = "No asignada"
@@ -95,57 +171,38 @@ def assign_routine(email):
     if 'user' not in session or not session.get('is_admin'):
         return redirect(url_for('login'))
     
-    users = load_users()
     user = next((u for u in users if u['email'] == email), None)
     
     if request.method == 'POST':
         routine = request.form['routine']
         if user:
             user['routine'] = routine
-            save_users(users)
         return redirect(url_for('admin_dashboard'))
     
-    routines = load_routines()  # Cargar las rutinas
     return render_template('assign_routine.html', user=user, routines=routines)
 
 @app.route('/view_exercises/<email>')
 def view_exercises(email):
     if 'user' not in session or (session['user'] != email and not session.get('is_admin')):
         return redirect(url_for('login'))
-    users = load_users()
     user = next((u for u in users if u['email'] == email), None)
     if not user:
         return 'Usuario no encontrado', 404
 
-    routines = load_routines()
     user_routine = next((r for r in routines if r['name'] == user['routine']), None)
 
     return render_template('view_exercises.html', user=user, user_routine=user_routine)
-
-@app.route('/view_routine/<email>')
-def view_routine(email):
-    if 'user' not in session or (session['user'] != email and not session.get('is_admin')):
-        return redirect(url_for('login'))
-    users = load_users()
-    user = next((u for u in users if u['email'] == email), None)
-    if not user:
-        return 'Usuario no encontrado', 404
-
-    routines = load_routines()
-    user_routine = next((r for r in routines if r['name'] == user['routine']), None)
-
-    return render_template('view_routine.html', user=user, user_routine=user_routine)
 
 @app.route('/delete_user/<email>', methods=['GET', 'POST'])
 def delete_user(email):
     if 'user' not in session or not session.get('is_admin'):
         return redirect(url_for('login'))
     
-    users = load_users()
+    global users
     users = [u for u in users if u['email'] != email]
-    save_users(users)
     
     return redirect(url_for('admin_dashboard'))
+
 
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
@@ -159,7 +216,6 @@ def add_user():
         plan = request.form['plan']
         valid_until = (datetime.now() + timedelta(days=30)).date().isoformat()
         
-        users = load_users()
         if any(u['email'] == email for u in users):
             return 'Email already registered', 400
         
@@ -173,22 +229,25 @@ def add_user():
             'is_admin': False,
             'routine': "No asignada"
         })
-        save_users(users)
         
         return redirect(url_for('admin_dashboard'))
     
     return render_template('add_user.html')
 
-@app.route('/view_plans')
-def view_plans():
-    # Aquí puedes cargar los planes desde donde los tengas almacenados
-    planes = [
-        {'nombre': 'Plan Básico', 'descripcion': 'Acceso al gimnasio durante horas laborables.', 'precio': '$30/mes'},
-        {'nombre': 'Plan Avanzado', 'descripcion': 'Acceso ilimitado al gimnasio.', 'precio': '$50/mes'},
-        {'nombre': 'Plan Premium', 'descripcion': 'Acceso ilimitado al gimnasio + entrenamiento personalizado.', 'precio': '$80/mes'}
-    ]
-    return render_template('planes.html', planes=planes)
 
-if __name__ == '__main__':
+@app.route('/view_routine/<email>')
+def view_routine(email):
+    if 'user' not in session or (session['user'] != email and not session.get('is_admin')):
+        return redirect(url_for('login'))
+    user = next((u for u in users if u['email'] == email), None)
+    if not user:
+        return 'Usuario no encontrado', 404
+
+    user_routine = next((r for r in routines if r['name'] == user['routine']), None)
+
+    return render_template('view_routine.html', user=user, user_routine=user_routine)
+
+
+if __name__ == '_main_':
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
