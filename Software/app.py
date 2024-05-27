@@ -1,11 +1,43 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import os
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
-# Definir las listas de rutinas y usuarios
+# Datos definidos directamente en el archivo
+users = [
+    {
+        "name": "Admin User",
+        "email": "admin@example.com",
+        "password": "123",
+        "attendance": ["2024-05-26"],
+        "valid_until": "2024-12-31",
+        "is_admin": True,
+        "routine": ""
+    },
+    {
+        "name": "Laura",
+        "email": "laura@example.com",
+        "password": "123",
+        "plan": "Bajar de peso",
+        "attendance": [],
+        "valid_until": "2024-06-26",
+        "is_admin": False,
+        "routine": "Rutina Bajar de peso"
+    },
+    {
+        "name": "Ferruna",
+        "email": "feruuna@ex.com",
+        "password": "123",
+        "plan": "Quiero bajar de peso y ser mas rapida",
+        "attendance": [],
+        "valid_until": "2024-06-26",
+        "is_admin": False,
+        "routine": "No asignada"
+    }
+]
+
 routines = [
     {
         "name": "Rutina Aumento de masa muscular",
@@ -59,49 +91,6 @@ routines = [
         ]
     }
 ]
-
-users = [
-    {
-        "name": "Admin User",
-        "email": "admin@example.com",
-        "password": "123",
-        "attendance": [
-            "2024-05-26"
-        ],
-        "valid_until": "2024-12-31",
-        "is_admin": True,
-        "routine": ""
-    },
-    {
-        "name": "Carlos Abril",
-        "email": "carlos@example.com",
-        "password": "password1",
-        "attendance": [],
-        "valid_until": "2024-06-25",
-        "plan": "Premium",
-        "routine": "Rutina Aumento de masa muscular"
-    },
-    {
-        "name": "Maria Mayo",
-        "email": "maria@example.com",
-        "password": "password2",
-        "attendance": [],
-        "valid_until": "2024-06-30",
-        "plan": "Premium",
-        "routine": "Rutina Terapia"
-    },
-    {
-        "name": "Juan",
-        "email": "juan@gmail.com",
-        "password": "123",
-        "plan": "Básico",
-        "attendance": [],
-        "valid_until": "2024-06-26",
-        "is_admin": False,
-        "routine": "Rutina Aumento de masa muscular"
-    }
-]
-
 
 @app.route('/')
 def home():
@@ -193,6 +182,18 @@ def view_exercises(email):
 
     return render_template('view_exercises.html', user=user, user_routine=user_routine)
 
+@app.route('/view_routine/<email>')
+def view_routine(email):
+    if 'user' not in session or (session['user'] != email and not session.get('is_admin')):
+        return redirect(url_for('login'))
+    user = next((u for u in users if u['email'] == email), None)
+    if not user:
+        return 'Usuario no encontrado', 404
+
+    user_routine = next((r for r in routines if r['name'] == user['routine']), None)
+
+    return render_template('view_routine.html', user=user, user_routine=user_routine)
+
 @app.route('/delete_user/<email>', methods=['GET', 'POST'])
 def delete_user(email):
     if 'user' not in session or not session.get('is_admin'):
@@ -202,7 +203,6 @@ def delete_user(email):
     users = [u for u in users if u['email'] != email]
     
     return redirect(url_for('admin_dashboard'))
-
 
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
@@ -234,19 +234,14 @@ def add_user():
     
     return render_template('add_user.html')
 
-
-@app.route('/view_routine/<email>')
-def view_routine(email):
-    if 'user' not in session or (session['user'] != email and not session.get('is_admin')):
-        return redirect(url_for('login'))
-    user = next((u for u in users if u['email'] == email), None)
-    if not user:
-        return 'Usuario no encontrado', 404
-
-    user_routine = next((r for r in routines if r['name'] == user['routine']), None)
-
-    return render_template('view_routine.html', user=user, user_routine=user_routine)
-
+@app.route('/view_plans')
+def view_plans():
+    planes = [
+        {'nombre': 'Plan Básico', 'descripcion': 'Acceso al gimnasio durante horas laborables.', 'precio': '$30/mes'},
+        {'nombre': 'Plan Avanzado', 'descripcion': 'Acceso ilimitado al gimnasio.', 'precio': '$50/mes'},
+        {'nombre': 'Plan Premium', 'descripcion': 'Acceso ilimitado al gimnasio + entrenamiento personalizado.', 'precio': '$80/mes'}
+    ]
+    return render_template('planes.html', planes=planes)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
