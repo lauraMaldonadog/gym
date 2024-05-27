@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-DATA_FILE = 'Software/gym_app/users.json'
+DATA_FILE = 'Software/users.json'
 def load_routines():
-    with open('Software/gym_app/routines.json', 'r') as file:
+    with open('Software/routines.json', 'r') as file:
         return json.load(file)
 
 
